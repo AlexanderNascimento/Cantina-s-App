@@ -1,8 +1,8 @@
-import React, { useState,useRef } from 'react';
-import { Text, SafeAreaView, TextInput, TouchableOpacity, StyleSheet, StatusBar, View, Dimensions, FlatList, TouchableWithoutFeedback,Animated } from 'react-native';
-import { Ionicons,Feather,MaterialIcons } from '@expo/vector-icons';
+import React, { useState, useRef } from 'react';
+import { Text, SafeAreaView, TextInput, TouchableOpacity, StyleSheet, StatusBar, View, Dimensions, FlatList, TouchableWithoutFeedback, Animated } from 'react-native';
+import { Ionicons, Feather, MaterialIcons } from '@expo/vector-icons';
 import Theme from '../Constants/Theme';
-import { PanGestureHandler} from 'react-native-gesture-handler';
+import { PanGestureHandler } from 'react-native-gesture-handler';
 
 import homeJson from '../testes/home';
 import classi from '../testes/Classifications';
@@ -10,17 +10,19 @@ import classi from '../testes/Classifications';
 const { width, height } = Dimensions.get('screen');
 
 export default function Home() {
-    
-    const[ clas,setClas] = useState(classi);
-    const [data, setData] = useState(homeJson);
-    const [helper,setHelper] = useState(0)
-    const [price,setPrice]=useState(0);
-    const [itensToBuy,setItensToBuy] = useState([])
-    const sizeHeight=useRef(new Animated.Value(0)).current;
-   
+
+    const [clas, setClas] = useState(classi); //classificações dos itens
+    const [data, setData] = useState(homeJson); //itens
+    const [helper, setHelper] = useState(0) //quantidade dde itens selecionados 
+    const [price, setPrice] = useState(0); //preço total
+    const [itensToBuy, setItensToBuy] = useState([]); //lista de itens selecionados
+    const [dontAsk, setDontAsk] = useState([]);
+    const [n, setN] = useState(0);
+    const sizeHeight = useRef(new Animated.Value(0)).current;
+
     return (
         <SafeAreaView style={styles.Container}>
-            <StatusBar barStyle='light-content' backgroundColor="red" />
+            <StatusBar barStyle='light-content' backgroundColor={Theme.COLORS.DEFAULT} />
             <View style={styles.HeaderBar}>
                 <View style={styles.ViewInput}>
                     <TextInput style={styles.Input} placeholder="Nome do Lanche" placeholderTextColor={Theme.COLORS.PLACEHOLDER}
@@ -32,192 +34,189 @@ export default function Home() {
                     data={clas}
                     keyExtractor={iten => { iten.id }}
                     renderItem={({ item }) => (
-                        <ClassiList item={item} />)}   
+                        <ClassiList item={item} />)}
                 />
             </View>
-         
-            <TouchableWithoutFeedback onPress={()=>{CarOpen()}}>
-            <Animated.View style={[styles.Car,{height:sizeHeight}]}>
-                <View style={styles.CarHeader}>
-                    <Text style={styles.CarText}>{helper}</Text>
-                    <Text style={[styles.Total, styles.CarText]}>Total</Text>
-                    <Text style={styles.CarText}>R$ {price}</Text>
-                </View>
-                <FlatList
-                    data={itensToBuy}
-                    keyExtractor={iten => { iten.id }}
-                    renderItem={({ item }) => (
-                        <CarList item={item} />)}   
-                />
-               
-                <TouchableOpacity style={styles.Button} >
-                    <Text style={styles.ButtonText}>Comprar</Text>
-                </TouchableOpacity>
-            </Animated.View>
+            <PanGestureHandler
+                onGestureEvent={ }
+                onHandlerStateChange={ }>
+                <TouchableWithoutFeedback onPress={() => { CarOpen() }}>
+                    <Animated.View style={[styles.Car, { height: sizeHeight }]}>
+                        <View style={styles.CarHeader}>
+                            <Text style={styles.CarText}>{helper}</Text>
+                            <Text style={[styles.Total, styles.CarText]}>Total</Text>
+                            <Text style={styles.CarText}>R$ {price}</Text>
+                        </View>
+                        <FlatList
+                            data={itensToBuy}
+                            keyExtractor={iten => { iten.id }}
+                            renderItem={({ item }) => (
+                                <CarList item={item} />)}
+                        />
 
-            </TouchableWithoutFeedback> 
-           
+                        <TouchableOpacity style={styles.Button} >
+                            <Text style={styles.ButtonText}>Comprar</Text>
+                        </TouchableOpacity>
+                    </Animated.View>
+
+                </TouchableWithoutFeedback>
+            </PanGestureHandler>
         </SafeAreaView>
     );
-    function CarList({item}){
-        return(
-            
-        <View style={styles.CarContent}>
-        <Text style={[styles.CarText,{fontSize:20}]}>{item.name}</Text>
-        <Text style={[styles.CarText,{fontSize:15}]}>{item.price}</Text>
-        <View style={styles.CarQuantidade}>
-            <TouchableWithoutFeedback onPress={()=>{PlusIten(item)}}>
-                <Text  style={[styles.CarText,{fontSize:25}]}>+</Text>
-            </TouchableWithoutFeedback>
-            <Text style={styles.CarText}>{item.quantidade}</Text>
-            <TouchableWithoutFeedback onPress={()=>{SubIten(item)}}>
-                <Text  style={[styles.CarText,{fontSize:25}]}>-</Text>
-            </TouchableWithoutFeedback>
-        </View>
-        <TouchableWithoutFeedback onPress={()=>{RemoveItem(item)}} >
-        <MaterialIcons name="cancel" size={25} color={Theme.COLORS.SECONDARY} />
-        </TouchableWithoutFeedback>
-    </View>
-        );
-    }
-    
-    function RemoveItem(itemSelected){
-        const newData= itensToBuy.map(item=>{
-            if(itemSelected.id==item.id){
-                setHelper(helper-itemSelected.quantidade);
-                if(price-(itemSelected.price*itemSelected.quantidade)<=0){
-                    setPrice(0);                   
-                  }else{
-                    setPrice(price-(itemSelected.price*itemSelected.quantidade));
-                  }
-                return{
-                    ...itemSelected,
-                    quantidade:0,
-                }
-                
-            }
-            return{
-                ...item,
-               quantidade:item.quantidade
-            }
-        });
-        const Gambiarra= newData.filter(i=>i.quantidade>0);
-        if(Gambiarra.length>0){
-            setItensToBuy(Gambiarra);
-        }else{
-            CloseCar(true);
-        }
-     
-     
-    
-     
-    }
-    function SubIten(itemSelected){
-        const newData= itensToBuy.map(item=>{
-            if(itemSelected.id==item.id){
-                return{
-                    ...itemSelected,
-                    quantidade:itemSelected.quantidade-1,
-                }
-                
-            }
-            return{
-                ...item,
-               quantidade:item.quantidade
-            }
-        });
-        const Gambiarra= newData.filter(i=>i.quantidade>0);
-        
-        if(Gambiarra.length>0){
-            setItensToBuy(Gambiarra);
-        }else{
-            CloseCar(true);
-        }
-      
-            if(price-itemSelected.price<=0){
-                setPrice(0);
-               
-            }else{
-                setPrice(price-itemSelected.price);
-            }
-      setHelper(helper-1);
-    
-    }
-    function PlusIten(itemSelected){
-        const newData= itensToBuy.map(item=>{
-            if(itemSelected.id==item.id){
-                return{
-                    ...itemSelected,
-                    quantidade:itemSelected.quantidade+1,
-                }
-            }
-            return{
-                ...item,
-                quantidade:item.quantidade
-            }
-        });
-     
-      setItensToBuy(newData);
-      setPrice(price+itemSelected.price);
-      setHelper(helper+1);
-
-    }
-    function CloseCar(noItens=false){
-            if(noItens){
-                setItensToBuy([]);
-                setData(homeJson);
-            }
-            Animated.timing(sizeHeight, {
-                toValue: noItens ? 0 : 50,
-                duration: 1000,
-                useNativeDriver:false
-              }).start();
-        
-    }
     function ClassiList({ item }) {
-        const list=data.filter(i=>i.classification==item.id)
-        return (
-            <>
-                <View style={styles.Classification}>
-                    <Text style={styles.ClassificationText}>{item.name}</Text>
-                    <TouchableWithoutFeedback onPress={()=>{Open(item)}}>
-                        <Feather name="arrow-up" size={30} color={Theme.COLORS.DEFAULT} />
-                    </TouchableWithoutFeedback>
-                </View>
+        const list = data.filter(i => i.classification == item.id)
 
-            {!item.selected &&
-               list.map(i=>(
-                  
-                    <View style={styles.Iten}>
-                    <View style={styles.ItenText}>
-                        <View style={styles.ItenHeader}>
-                            <Text style={styles.ItenTittle}>{i.name}</Text>
-                            <Text style={styles.ItenPrice}>{i.price}</Text>
-                        </View>
-                        
-                        <Text style={styles.ItenDescription}>{i.description}</Text>
+        if (list.length == 0) {
+            return (<View></View>)
+        } else {
+            return (
+                <>
+
+                    <View style={styles.Classification}>
+                        <Text style={styles.ClassificationText}>{item.name}</Text>
+                        <TouchableWithoutFeedback onPress={() => { Open(item) }}>
+                            <Feather name="arrow-up" size={30} color={Theme.COLORS.DEFAULT} />
+                        </TouchableWithoutFeedback>
                     </View>
 
-                    <TouchableOpacity style={styles.ItenButton} onPress={() => { Select(i) }}>
-                        <Ionicons name="add" size={25} color={Theme.COLORS.SECONDARY} />
-                    </TouchableOpacity>
-                </View>
-               
-               ))}
-            </>);
+                    {!item.selected &&
+                        list.map(i => (
+
+                            <View style={styles.Iten}>
+                                <View style={styles.ItenText}>
+                                    <View style={styles.ItenHeader}>
+                                        <Text style={styles.ItenTittle}>{i.name}</Text>
+                                        <Text style={styles.ItenPrice}>{i.price}</Text>
+                                    </View>
+
+                                    <Text style={styles.ItenDescription}>{i.description}</Text>
+                                </View>
+
+                                <TouchableOpacity style={styles.ItenButton} onPress={() => { Select(i) }}>
+                                    <Ionicons name="add" size={25} color={Theme.COLORS.SECONDARY} />
+                                </TouchableOpacity>
+                            </View>
+
+                        ))}
+                </>);
+        }
     }
-    
+    function CarList({ item }) {
+        return (
+
+            <View style={styles.CarContent}>
+                <Text style={[styles.CarText, { fontSize: 20 }]}>{item.name}</Text>
+                <Text style={[styles.CarText, { fontSize: 15 }]}>{item.price}</Text>
+                <View style={styles.CarQuantidade}>
+                    <TouchableWithoutFeedback onPress={() => { PlusIten(item) }}>
+                        <Text style={[styles.CarText, { fontSize: 25 }]}>+</Text>
+                    </TouchableWithoutFeedback>
+                    <Text style={styles.CarText}>{item.quantidade}</Text>
+                    <TouchableWithoutFeedback onPress={() => { SubIten(item) }}>
+                        <Text style={[styles.CarText, { fontSize: 25 }]}>-</Text>
+                    </TouchableWithoutFeedback>
+                </View>
+                <TouchableWithoutFeedback onPress={() => { RemoveItem(item) }} >
+                    <MaterialIcons name="cancel" size={25} color={Theme.COLORS.SECONDARY} />
+                </TouchableWithoutFeedback>
+            </View>
+        );
+    }
+
+    function RemoveItem(itemSelected) {
+        const newData = itensToBuy.map(item => {
+            if (itemSelected.id == item.id) {
+                setHelper(helper - itemSelected.quantidade);
+                if (price - (itemSelected.price * itemSelected.quantidade) <= 0) {
+                    setPrice(0);
+                } else {
+                    setPrice(price - (itemSelected.price * itemSelected.quantidade));
+                }
+                return {
+                    ...itemSelected,
+                    quantidade: 0,
+                }
+
+            }
+            return {
+                ...item,
+                quantidade: item.quantidade
+            }
+        });
+        const Gambiarra = newData.filter(i => i.quantidade > 0);
+        if (Gambiarra.length > 0) {
+            setItensToBuy(Gambiarra);
+        } else {
+            CloseCar(true);
+        }
+    }
+    function SubIten(itemSelected) {
+        const newData = itensToBuy.map(item => {
+            if (itemSelected.id == item.id) {
+                return {
+                    ...itemSelected,
+                    quantidade: itemSelected.quantidade - 1,
+                }
+
+            }
+            return {
+                ...item,
+                quantidade: item.quantidade
+            }
+        });
+        const Gambiarra = newData.filter(i => i.quantidade > 0);
+
+        if (Gambiarra.length > 0) {
+            setItensToBuy(Gambiarra);
+        } else {
+            CloseCar(true);
+        }
+
+        if (price - itemSelected.price <= 0) {
+            setPrice(0);
+
+        } else {
+            setPrice(price - itemSelected.price);
+        }
+        setHelper(helper - 1);
+
+    }
+    function PlusIten(itemSelected) {
+        const newData = itensToBuy.map(item => {
+            if (itemSelected.id == item.id) {
+                return {
+                    ...itemSelected,
+                    quantidade: itemSelected.quantidade + 1,
+                }
+            }
+            return {
+                ...item,
+                quantidade: item.quantidade
+            }
+        });
+
+        setItensToBuy(newData);
+        setPrice(price + itemSelected.price);
+        setHelper(helper + 1);
+
+    }
+
+
     function Searching(text) {
+
         if (text.length > 0) {
+            n == 0 && setDontAsk(data);
+            setN(n + 1);
             setData(data.filter(i => (
                 i.name.toLowerCase().includes(text.toLowerCase())
             )));
         } else {
-            setData(homeJson);
+            setData(dontAsk);
+            setN(0);
         }
     }
     function Select(itemSelected) {
-     
+
         const newData = data.map(item => {
             if (item.id == itemSelected.id) {
                 if (item.quantidade >= 1) {
@@ -241,17 +240,17 @@ export default function Home() {
 
 
         setData(newData);
-        setPrice(price+itemSelected.price);
-        setHelper(helper+1)
-     
-            Animated.timing(sizeHeight, {
-                toValue: 50,
-                duration: 1000,
-                useNativeDriver:false
-              }).start();      
-      
-     
-    } 
+        setPrice(price + itemSelected.price);
+        setHelper(helper + 1)
+
+        Animated.timing(sizeHeight, {
+            toValue: 50,
+            duration: 1000,
+            useNativeDriver: false
+        }).start();
+
+
+    }
     function Open(SelectedItem) {
         const newData = clas.map(item => {
             if (item.id == SelectedItem.id) {
@@ -267,16 +266,28 @@ export default function Home() {
         })
         setClas(newData);
     }
-    function CarOpen(){
-        setItensToBuy(data.filter(i=>i.quantidade>0));
+    function CarOpen() {
+        setItensToBuy(data.filter(i => i.quantidade > 0));
         Animated.timing(sizeHeight, {
-            toValue: height/1.7,
-            duration: 1000,
-            useNativeDriver:false
-          }).start();
+            toValue: height / 1.7,
+            duration: 1500,
+            useNativeDriver: false
+        }).start();
     }
-    
-   
+    function CloseCar(noItens = false) {
+        if (noItens) {
+            setItensToBuy([]);
+            setData(homeJson);
+        }
+        Animated.timing(sizeHeight, {
+            toValue: noItens ? 0 : 50,
+            duration: 1000,
+            useNativeDriver: false
+        }).start();
+
+    }
+
+
 }
 
 const styles = StyleSheet.create({
@@ -317,7 +328,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-around',
         alignItems: 'baseline',
-        marginVertical:5,
+        marginVertical: 5,
     },
     ItenText: {
         flexDirection: 'column'
@@ -331,9 +342,9 @@ const styles = StyleSheet.create({
         color: Theme.COLORS.DEFAULT,
         fontSize: 25
     },
-    ItenPrice:{
+    ItenPrice: {
         color: Theme.COLORS.DEFAULT,
-        fontSize:18,
+        fontSize: 18,
     },
     ItenDescription: {
         color: Theme.COLORS.MUTED,
@@ -354,7 +365,7 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 20,
         elevation: 5,
         color: 'white',
-       
+
     },
     CarHeader: {
         marginVertical: 10,
@@ -369,37 +380,37 @@ const styles = StyleSheet.create({
         fontSize: 30,
         fontWeight: 'bold'
     },
-    Classification:{
-       marginHorizontal:10,
+    Classification: {
+        marginHorizontal: 10,
         flexDirection: 'row',
         justifyContent: 'space-between',
-        alignItems:'baseline',
-        width:width-20
+        alignItems: 'baseline',
+        width: width - 20
     },
-    ClassificationText:{
+    ClassificationText: {
         color: Theme.COLORS.DEFAULT,
         fontWeight: 'bold',
-        fontSize:30
+        fontSize: 30
     },
     CarContent: {
-        flexDirection:'row',
+        flexDirection: 'row',
         justifyContent: 'space-around',
-        alignItems:'baseline',
+        alignItems: 'baseline',
     },
     CarQuantidade: {
-        flexDirection:'column',
-        alignItems:'center',
+        flexDirection: 'column',
+        alignItems: 'center',
     },
-    Button:{
-        borderColor:'white',
-        borderWidth:1,
-        borderRadius:20,
-        alignItems:'center',
-        margin:20,
-        paddingVertical:10,
+    Button: {
+        borderColor: 'white',
+        borderWidth: 1,
+        borderRadius: 20,
+        alignItems: 'center',
+        margin: 20,
+        paddingVertical: 10,
     },
-    ButtonText:{
-        color:'white',
+    ButtonText: {
+        color: 'white',
     }
 
 })
