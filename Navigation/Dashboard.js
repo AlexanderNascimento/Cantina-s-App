@@ -1,5 +1,6 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Ionicons,FontAwesome,FontAwesome5 } from '@expo/vector-icons'; 
 import Theme from '../Constants/Theme'
 
@@ -7,9 +8,13 @@ import Theme from '../Constants/Theme'
 import Home from '../Screens/Home';
 import Profile from '../Screens/Profile';
 import Pedidos from '../Screens/Pedidos';
+import Buy from '../Screens/Buy';
+
+const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
 
 export default function Dashboard() {
-    const Tab = createBottomTabNavigator();
+    
     return(
         <Tab.Navigator 
         screenOptions={{
@@ -23,11 +28,34 @@ export default function Dashboard() {
                 borderTopColor:'transparent',
             }
         }}>
-            <Tab.Screen name="Home" component={Home} options={{ tabBarIcon:({size,color})=>(<Ionicons name="ios-home" size={size} color={color} />)}}/>
+            <Tab.Screen name="BuyinRoutes" component={BuyingRoutes} options={{ tabBarIcon:({size,color})=>(<Ionicons name="ios-home" size={size} color={color} />)}}/>
 
             <Tab.Screen name="Pedidos" component={Pedidos} options={{ tabBarIcon:({size,color})=>(<FontAwesome5 name="list-alt" size={size} color={color} />)}}/>
 
             <Tab.Screen name="Profile" component={Profile} options={{ tabBarIcon:({size,color})=>(<FontAwesome name="user" size={size} color={color} />)}}/>
         </Tab.Navigator>
+    );
+}
+
+
+
+function BuyingRoutes(){
+    
+    return(
+        <Stack.Navigator  >
+            <Stack.Screen name="Home" component={Home} options={{headerShown:false}}/>
+            <Stack.Screen name="Buy" component={Buy} options={{
+                title:'Comprar',
+                headerStyle: {
+                    backgroundColor: Theme.COLORS.DEFAULT,
+                  },
+                  headerTintColor: Theme.COLORS.SECONDARY,
+                  headerTitleStyle: {
+                    fontWeight: 'bold',
+                    elevation:5,
+                  },
+            }}/>
+           
+        </Stack.Navigator>
     );
 }

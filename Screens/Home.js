@@ -9,7 +9,7 @@ import classi from '../testes/Classifications';
 
 const { width, height } = Dimensions.get('screen');
 
-export default function Home() {
+export default function Home({navigation}) {
 
     const [clas, setClas] = useState(classi); //classificações dos itens
     const [data, setData] = useState(homeJson); //itens
@@ -22,12 +22,14 @@ export default function Home() {
 
     return (
         <SafeAreaView style={styles.Container}>
+           
             <StatusBar barStyle='light-content' backgroundColor={Theme.COLORS.DEFAULT} />
             <View style={styles.HeaderBar}>
                 <View style={styles.ViewInput}>
                     <TextInput style={styles.Input} placeholder="Nome do Lanche" placeholderTextColor={Theme.COLORS.PLACEHOLDER}
                         onChangeText={text => { Searching(text) }} />
                 </View>
+                
             </View>
             <View style={styles.Content}>
                 <FlatList
@@ -52,7 +54,7 @@ export default function Home() {
                                 <CarList item={item} />)}
                         />
 
-                        <TouchableOpacity style={styles.Button} >
+                        <TouchableOpacity style={styles.Button} onPress={() =>{navigation.navigate('Buy',{itensToBuy:itensToBuy,Price:price,Qtn:helper})}}>
                             <Text style={styles.ButtonText}>Comprar</Text>
                         </TouchableOpacity>
                     </Animated.View>
