@@ -54,7 +54,9 @@ export default function Home({navigation}) {
                                 <CarList item={item} />)}
                         />
 
-                        <TouchableOpacity style={styles.Button} onPress={() =>{navigation.navigate('Buy',{itensToBuy:itensToBuy,Price:price,Qtn:helper})}}>
+                        <TouchableOpacity style={styles.Button} onPress={() =>{navigation.navigate('Buy',{itensToBuy:itensToBuy,Price:price,Qtn:helper});
+                        CloseCar(true)
+                    }}>
                             <Text style={styles.ButtonText}>Comprar</Text>
                         </TouchableOpacity>
                     </Animated.View>
@@ -278,6 +280,8 @@ export default function Home({navigation}) {
         if (noItens) {
             setItensToBuy([]);
             setData(homeJson);
+            setHelper(0);
+            setPrice(0);
         }
         Animated.timing(sizeHeight, {
             toValue: noItens ? 0 : 50,
