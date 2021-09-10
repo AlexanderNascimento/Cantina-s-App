@@ -1,6 +1,7 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons,FontAwesome,FontAwesome5 } from '@expo/vector-icons'; 
+import Theme from '../Constants/Theme'
 
 //screens
 import Home from '../Screens/Home';
@@ -13,11 +14,11 @@ export default function Dashboard() {
         <Tab.Navigator 
         screenOptions={{
             headerShown:false,    
-            tabBarActiveTintColor:'white',
+            tabBarActiveTintColor:Theme.COLORS.SECONDARY,
             tabBarInactiveTintColor: 'rgba(255,255,255,0.5)',
             tabBarShowLabel:false,
             tabBarStyle:{
-                backgroundColor:'red',
+                backgroundColor:Theme.COLORS.DEFAULT,
                 elevation:10,
                 borderTopColor:'transparent',
             }

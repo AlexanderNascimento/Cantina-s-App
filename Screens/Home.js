@@ -32,14 +32,12 @@ export default function Home() {
             <View style={styles.Content}>
                 <FlatList
                     data={clas}
-                    keyExtractor={iten => { iten.id }}
+                    keyExtractor={iten => { 'Key'+iten.id }}
                     renderItem={({ item }) => (
                         <ClassiList item={item} />)}
                 />
             </View>
-            <PanGestureHandler
-                onGestureEvent={ }
-                onHandlerStateChange={ }>
+           
                 <TouchableWithoutFeedback onPress={() => { CarOpen() }}>
                     <Animated.View style={[styles.Car, { height: sizeHeight }]}>
                         <View style={styles.CarHeader}>
@@ -60,7 +58,7 @@ export default function Home() {
                     </Animated.View>
 
                 </TouchableWithoutFeedback>
-            </PanGestureHandler>
+           
         </SafeAreaView>
     );
     function ClassiList({ item }) {
@@ -245,7 +243,7 @@ export default function Home() {
 
         Animated.timing(sizeHeight, {
             toValue: 50,
-            duration: 1000,
+            duration: 2000,
             useNativeDriver: false
         }).start();
 
@@ -270,7 +268,7 @@ export default function Home() {
         setItensToBuy(data.filter(i => i.quantidade > 0));
         Animated.timing(sizeHeight, {
             toValue: height / 1.7,
-            duration: 1500,
+            duration: 2500,
             useNativeDriver: false
         }).start();
     }
@@ -281,7 +279,7 @@ export default function Home() {
         }
         Animated.timing(sizeHeight, {
             toValue: noItens ? 0 : 50,
-            duration: 1000,
+            duration: 2500,
             useNativeDriver: false
         }).start();
 
