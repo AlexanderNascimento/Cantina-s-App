@@ -3,8 +3,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Theme from '../Constants/Theme';
 
 import Dashboard from './Dashboard';
-import Login from '../Screens/Login';
-import Register from '../Screens/Register';
+import Login from '../Views/Login';
+import Register from '../Views/Register';
 export default function Routes(){
     const Stack = createNativeStackNavigator();
     return(

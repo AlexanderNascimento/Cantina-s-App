@@ -10,7 +10,7 @@ import classi from '../testes/Classifications';
 const { width, height } = Dimensions.get('screen');
 
 export default function Home({navigation}) {
-
+    const [toggleCar,setToggle]=useState(false);
     const [clas, setClas] = useState(classi); //classificações dos itens
     const [data, setData] = useState(homeJson); //itens
     const [helper, setHelper] = useState(0) //quantidade dde itens selecionados 
@@ -40,13 +40,17 @@ export default function Home({navigation}) {
                 />
             </View>
            
-                <TouchableWithoutFeedback onPress={() => { CarOpen() }}>
+              
                     <Animated.View style={[styles.Car, { height: sizeHeight }]}>
+                        <>
+                    <TouchableWithoutFeedback onPress={() => { CarOpen() }}>
                         <View style={styles.CarHeader}>
+                            
                             <Text style={styles.CarText}>{helper}</Text>
                             <Text style={[styles.Total, styles.CarText]}>Total</Text>
                             <Text style={styles.CarText}>R$ {price}</Text>
-                        </View>
+                        </View>  
+                        </TouchableWithoutFeedback>
                         <FlatList
                             data={itensToBuy}
                             keyExtractor={iten => { iten.id }}
@@ -59,9 +63,10 @@ export default function Home({navigation}) {
                     }}>
                             <Text style={styles.ButtonText}>Comprar</Text>
                         </TouchableOpacity>
+                        </>
                     </Animated.View>
 
-                </TouchableWithoutFeedback>
+              
            
         </SafeAreaView>
     );
@@ -198,6 +203,7 @@ export default function Home({navigation}) {
         });
 
         setItensToBuy(newData);
+        setItensToBuy(data.filter(i => i.quantidade > 0));
         setPrice(price + itemSelected.price);
         setHelper(helper + 1);
 
@@ -242,14 +248,18 @@ export default function Home({navigation}) {
 
 
         setData(newData);
+        setItensToBuy(data.filter(i => i.quantidade > 0));
+        if(helper==0){
+            Animated.timing(sizeHeight, {
+                toValue: 50,
+                duration: 2000,
+                useNativeDriver: false
+            }).start();
+        }
         setPrice(price + itemSelected.price);
         setHelper(helper + 1)
-
-        Animated.timing(sizeHeight, {
-            toValue: 50,
-            duration: 2000,
-            useNativeDriver: false
-        }).start();
+        
+      
 
 
     }
@@ -270,11 +280,21 @@ export default function Home({navigation}) {
     }
     function CarOpen() {
         setItensToBuy(data.filter(i => i.quantidade > 0));
-        Animated.timing(sizeHeight, {
-            toValue: height / 1.7,
-            duration: 2500,
-            useNativeDriver: false
-        }).start();
+        if(!toggleCar){
+            Animated.timing(sizeHeight, {
+                toValue: height / 1.7,
+                duration: 2500,
+                useNativeDriver: false
+            }).start();
+            
+        }else{
+            Animated.timing(sizeHeight, {
+                toValue: 50,
+                duration: 2500,
+                useNativeDriver: false
+            }).start();
+        }
+       setToggle(!toggleCar)
     }
     function CloseCar(noItens = false) {
         if (noItens) {

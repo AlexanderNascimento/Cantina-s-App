@@ -5,10 +5,10 @@ import { Ionicons,FontAwesome,FontAwesome5 } from '@expo/vector-icons';
 import Theme from '../Constants/Theme'
 
 //screens
-import Home from '../Screens/Home';
-import Profile from '../Screens/Profile';
-import Pedidos from '../Screens/Pedidos';
-import Buy from '../Screens/Buy';
+import Home from '../Views/Home';
+import Profile from '../Views/Profile';
+import Pedidos from '../Views/Pedidos';
+import Buy from '../Views/Buy';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();

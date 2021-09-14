@@ -15,7 +15,6 @@ export default function Buy({ route, navigation }) {
     const [notify, setNotify] = useState(false);
 
 
-
     function DataAtual() {
         const meses = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
         let data = new Date();
@@ -23,12 +22,9 @@ export default function Buy({ route, navigation }) {
         return dataFormatada;
     }
 
-
     function copyToClipboard(text) {
         Clipboard.setString(text);
     };
-
-
 
     return (
         <SafeAreaView style={styles.Container}>
@@ -83,7 +79,7 @@ export default function Buy({ route, navigation }) {
                 <View style={styles.Total}>
                     <Text style={styles.TotalText}>Total : R${Price}</Text>
                 </View>
-                <TouchableOpacity style={styles.Button} onPress={()=>{navigation.navigate('Home')}}>
+                <TouchableOpacity style={styles.Button} onPress={() => { navigation.navigate('Home') }}>
                     <Text style={styles.ButtonText}>Finalizar Compra</Text>
                 </TouchableOpacity>
             </View>
@@ -139,7 +135,7 @@ const styles = StyleSheet.create({
         fontSize: 13
     },
     ListItens: {
-        flex:1,
+        flex: 1,
         alignItems: 'center',
         justifyContent: 'center'
     },
@@ -149,32 +145,32 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'baseline',
         marginTop: 10,
-        paddingBottom:5,
-       borderBottomWidth:StyleSheet.hairlineWidth,
-       borderColor:Theme.COLORS.MUTED
-       
+        paddingBottom: 5,
+        borderBottomWidth: StyleSheet.hairlineWidth,
+        borderColor: Theme.COLORS.MUTED
+
     },
     ItensInfo: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'baseline',
     },
-    ItenQtn:{
-        marginLeft:50,
-        borderRadius:40,
-        width:20,
-        height:20,
+    ItenQtn: {
+        marginLeft: 50,
+        borderRadius: 40,
+        width: 20,
+        height: 20,
         textAlign: 'center',
         backgroundColor: Theme.COLORS.DEFAULT,
         color: Theme.COLORS.SECONDARY,
     },
-    ItenName:{
-        marginLeft:5,
+    ItenName: {
+        marginLeft: 5,
         color: Theme.COLORS.DEFAULT,
         fontSize: 20
     },
-    ItenPrice:{
-        marginRight:50
+    ItenPrice: {
+        marginRight: 50
     },
     Footer: {
         flex: 1,
@@ -190,7 +186,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginTop: 20,
         paddingVertical: 10,
-        paddingHorizontal: width / 3-40,
+        paddingHorizontal: width / 3 - 40,
         marginBottom: 20,
 
     },

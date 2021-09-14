@@ -1,23 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import {
     Text, View, StyleSheet, SafeAreaView, StatusBar, Image,
     TouchableOpacity, TouchableWithoutFeedback, Dimensions, TextInput
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons, FontAwesome5, AntDesign, Entypo } from '@expo/vector-icons';
 import Theme from '../Constants/Theme';
 const { width, height } = Dimensions.get('screen');
 export default function Profile({navigation}) {
     const [Password, setPassword] = useState(false);
-    const [Email,setEmail] =useState(false);
     const [Name,setName]=useState(false);
+    const [user,setUser]=useState([]);
+    useEffect(()=>{
+        async function GetUser(){
+            let response = await AsyncStorage.getItem('userData');
+            setUser(JSON.parse(response));
+        }
+        GetUser();
+    },[])
     return (
         <SafeAreaView style={styles.Container}>
             <StatusBar barStyle='light-content' backgroundColor={Theme.COLORS.DEFAULT} />
             <View style={styles.Header}>
 
                 <View style={styles.HeaderText}>
-                    <Text style={styles.HeaderName}>Cesár Jassente Pinto</Text>
-                    <Text style={styles.HeaderRM}>6969666-24</Text>
+                    <Text style={styles.HeaderName}>{user.tb01_Name+' '+user.tb01_LastName}</Text>
+                    <Text style={styles.HeaderRM}>{user.tb01_RM}</Text>
                 </View>
             </View>
 
@@ -26,7 +34,7 @@ export default function Profile({navigation}) {
                     <View style={styles.Iten}>
                         <TextInput
                             style={styles.ItenInput}
-                            defaultValue='Cesár Jassente Pinto'
+                            defaultValue={user.tb01_Name+' '+user.tb01_LastName}
                             editable={Name} />
                         <TouchableWithoutFeedback
                             style={styles.ItenButton}
@@ -39,20 +47,7 @@ export default function Profile({navigation}) {
                     <View style={styles.Iten}>
                         <TextInput
                             style={styles.ItenInput}
-                            defaultValue='cesar@tcc.com'
-                            editable={Email} />
-                        <TouchableWithoutFeedback
-                            style={styles.ItenButton}
-                            onPress={() => { setEmail(!Email) }}>
-                            {Email ?
-                                <Entypo name="check" size={24} color={Theme.COLORS.SECONDARY} />
-                                : <FontAwesome5 name="pen" size={24} color={Theme.COLORS.SECONDARY} />}
-                        </TouchableWithoutFeedback>
-                    </View>
-                    <View style={styles.Iten}>
-                        <TextInput
-                            style={styles.ItenInput}
-                            defaultValue='126924'
+                            defaultValue={user.tb01_Password}
                             secureTextEntry={!Password}
                             editable={Password} />
                         <TouchableWithoutFeedback
@@ -67,7 +62,9 @@ export default function Profile({navigation}) {
                                
                 <View style={styles.Footer}>
 
-                    <TouchableOpacity style={styles.LogOutButton} onPress={()=>{navigation.popToTop()}}>
+                    <TouchableOpacity style={styles.LogOutButton} onPress={async()=>{
+                        await AsyncStorage.clear();
+                        navigation.popToTop()}}>
                         <AntDesign name="logout" style={styles.Icon} size={20} color={Theme.COLORS.SECONDARY} />
                         <Text style={styles.TextButton}>Sair</Text>
                     </TouchableOpacity>
@@ -76,9 +73,7 @@ export default function Profile({navigation}) {
         </SafeAreaView>
     );
 
-    function PasswordEdit() {
-
-    }
+   
 
 }
 const styles = StyleSheet.create({
