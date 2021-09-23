@@ -89,7 +89,7 @@ useEffect(()=>{
     );
 async function Login(values,actions){
     setModalVisible(true);
-        const login = await fetch('http://192.168.0.101:3000/login', {
+        const login = await fetch('http://192.168.0.102:3000/login', {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -109,6 +109,8 @@ async function Login(values,actions){
             await AsyncStorage.setItem('userData', user);
             actions.resetForm();
            navigation.navigate('Dashboard');
+       }else{
+        setModalVisible(false);
        }
     }
 }

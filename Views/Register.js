@@ -100,7 +100,7 @@ export default function Register({ navigation }) {
 
     async function RegisterUser(values,actions) {
         setModalVisible(true);
-        const registerUser = await fetch('http://192.168.0.101:3000/register', {
+        const registerUser = await fetch('http://192.168.0.102:3000/register', {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -117,8 +117,8 @@ export default function Register({ navigation }) {
        const data = await registerUser.json();
        
       
-       alert(JSON.stringify(data));
-       setTimeout(() => {
+    
+       
         if(data.aproved){
             setSend(true);
             setMensage(<Text style={{color:Theme.COLORS.DEFAULT}}>Cadastro realizado com sucesso</Text>);
@@ -129,8 +129,9 @@ export default function Register({ navigation }) {
             },2000)
         }else{
              setSend(false);
+             setModalVisible(false);
         }
-       },7000)
+       
        
     }
 
